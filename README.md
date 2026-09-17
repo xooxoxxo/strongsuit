@@ -1,5 +1,12 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/xooxoxxo/strongsuit/main/assets/logo.png" alt="strongsuit" width="640">
+  <img src="https://raw.githubusercontent.com/xooxoxxo/strongsuit/main/assets/brand/readme-banner.png" alt="strongsuit — dress your agent for the occasion" width="800">
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/strongsuit"><img src="https://img.shields.io/npm/v/strongsuit?color=e0a82e&label=npm" alt="npm version"></a>
+  <a href="https://github.com/xooxoxxo/strongsuit/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/xooxoxxo/strongsuit/ci.yml?branch=main&label=ci" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-e0a82e" alt="MIT"></a>
+  <a href="https://xooxoxxo.github.io/strongsuit/"><img src="https://img.shields.io/badge/docs-xooxoxxo.github.io%2Fstrongsuit-0d0c0a" alt="docs"></a>
 </p>
 
 **Agentic suits for Claude Code — dress your agent for the occasion.**
@@ -69,26 +76,11 @@ Two honest mechanics, printed at launch rather than papered over:
 
 ## Before and after
 
-```
-$ suit list
- ✔ brand-voice-enforcement    [manual-only]  Enforce consistent brand voice...  ~42 tok
- ✔ docx                                       Use this skill for Word docs...    ~18 tok
- ✔ legal-bd-sidekick          [manual-only]  Business development sidekick...   ~31 tok
- ✔ pptx                                       Use this skill for PowerPoint...    ~19 tok
- ✔ xlsx                                       Use this skill for Excel...        ~24 tok
+<p align="center">
+  <img src="https://raw.githubusercontent.com/xooxoxxo/strongsuit/main/assets/shots/suit-up.gif" alt="suit list, suit up coding, suit list: 7/7 skills and ~637 tokens become 3/7 and ~275" width="800">
+</p>
 
-5/5 active, ~154 tokens of descriptions loaded.
-
-$ suit use coding
-$ suit list
- ✔ docx                                       Use this skill for Word docs...    ~18 tok
- ✔ pptx                                       Use this skill for PowerPoint...    ~19 tok
- ✔ xlsx                                       Use this skill for Excel...        ~24 tok
-   brand-voice-enforcement    [manual-only]  Enforce consistent brand voice...  ~42 tok
-   legal-bd-sidekick          [manual-only]  Business development sidekick...   ~31 tok
-
-3/5 active, ~77 tokens of descriptions loaded.
-```
+Real output from a sandboxed library. `suit up coding` takes the loaded descriptions from 7/7 (~637 tokens) to 3/7 (~275). More shots in [`assets/shots/`](assets/shots/): [`suit status`](assets/shots/status.png), [`suit show`](assets/shots/show.png), [the review pipeline](assets/shots/install-review.png), [`suit run`](assets/shots/run.png).
 
 Token counts are **estimates** (SKILL.md bytes / 4), useful for spotting bloated skills at a glance, not measurements. The real savings show up in your Claude Code session context.
 
@@ -148,6 +140,10 @@ Every command is scriptable without a terminal:
 - **Switching is manual, not automatic.** The tool does not detect what kind of work you are doing and adjust. That is intentional — implicit switching would be unpredictable.
 - **Per-session skills are additive**, not exclusive — see [docs/session-isolation.md](docs/session-isolation.md) for the measured details.
 - **Bare `claude --resume` bypasses the suit binding.** Skills survive a resume, MCP flags do not. Always resume suit-launched conversations with `suit resume` or `suit run --continue`; no hook can protect a bare resume.
+
+## Support the project
+
+If strongsuit saves you time, star the repo and tell one colleague. Bug reports and honest reviews of the safety model are the most useful contribution. Sponsor links land with the 1.0.0 release.
 
 ## About
 
