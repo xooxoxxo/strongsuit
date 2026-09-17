@@ -1,0 +1,25 @@
+# How strongsuit Came to Exist
+
+Eighteen months ago, I started collecting Claude Code skills. Each solved a real problem: document editing (DOCX), brand voice enforcement, legal drafting templates, spreadsheet manipulation. They were all useful, and I never deleted them.
+
+Claude Code surfaces a warning when installed skills inflate token costs. The descriptions of all your skills load into every session, every turn, whether you need them or not. I was paying for legal-drafting advice in the middle of a coding session, and for brand-voice enforcement while debugging infrastructure. The only available remedies were blunt: disable one at a time in settings, or delete a folder and re-download it later. Neither was practical.
+
+I needed groups. I needed to say "for coding, I wear docx and pptx; for writing, I wear brand-voice enforcement; for legal work, I wear the drafting template." One command to switch. Nothing deleted. Everything reversible.
+
+That was the spark. The implementation was simpler than expected: Claude Code reads a directory; it does not care whether entries are real folders or symlinks. So a library holds every skill forever, and switching means rewriting symlinks in the active directory. Safe, atomic, instant.
+
+But as I built it, the scope grew. Skills were the obvious start, but I had also accumulated MCP servers (Claude Code's tool connectors), plugins, and hooks (commands that fire on events). A real suit needs all of them. And if you are installing suits from the internet, you need to see what you are about to run before it touches your machine.
+
+So I added a review pipeline. `suit install owner/repo` fetches into quarantine. Every component — skills, servers, plugins, hooks — is risk-classed and printed in full. You approve each one. Approvals pin the exact bytes by content hash. If upstream changes, or anything tampers locally, activation blocks with a diff until a human re-approves. The distinction matters: upstream updates and local edits look identical to code, so treat them the same.
+
+Then came the per-session question. You want to draft a proposal in a suit tuned for writing. You switch to that suit globally, start a session, finish, and switch back to your default. But what if you could avoid the switch altogether? What if `suit run writing -- -p "draft"` launched one Claude session wearing exactly that suit, and left your global setup untouched?
+
+It turned out to be possible. Claude Code accepts `--plugin-dir` (skills delivered one session only), `--strict-mcp-config` (exclusive MCP servers), and `--settings` (hooks for that session). But I did not trust my intuition. I measured it. I built a probe that asked a session to quote a codeword from a marker skill's description, run from the same directory with and without the session flags, and watched the results. Skills survived resume without flags; MCP isolation did not. So `suit resume` re-applies the MCP flags every time, and the session-map records which suit was born with which conversation.
+
+The docs exist because the product demanded them. Every safety guard — the symlink checks, the content-hash pinning, the rollback on failure, the ownership ledger that never touches a key it did not write — was mutation-tested. Guards were deliberately broken and the suite verified to go red. 30+ mutants named and killed. The test coverage landed at 348 tests across five CI platforms. Not because the number looked good, but because every behavior change demands tests for the real user flow and failure modes.
+
+What strongsuit is not: it is not automatic. It does not detect what kind of work you are doing and adjust. That was intentional. Implicit switching would be unpredictable. It is also not a personal-only utility. It is a public dev tool. The repo opened to the community from day one. Users should be able to share suits — to say "here is my research configuration, import it and approve what you want." That is the whole value of the review pipeline.
+
+Success for this project means adoption and credibility. Adoption: that power users of Claude Code install it, define suits for their workflows, and reach for it every day. Credibility: that the code is clean, the limits are stated plainly, every claim is backed by citable evidence, and nothing is hidden. The honest-limits-first voice is not a marketing tactic; it is the brand. If I hide the tradeoffs and a user discovers them later, that erodes trust. State them up front and the risk inverts: simpler products convert better with this audience than polish that hides constraints.
+
+The product asks one thing from its audience: read the care label first. Token figures are estimates, not measurements. Skills from a `suit run` session add on top of your global set. A bare `claude --resume` silently bypasses per-session MCP isolation. These are mechanical truths, not bugs, and they belong on the first page. A user who understands that — and chooses strongsuit anyway — is the user who will find real value in it.

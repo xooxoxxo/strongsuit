@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://xooxoxxo.github.io/strongsuit/sitemap.xml
